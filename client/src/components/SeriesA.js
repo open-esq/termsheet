@@ -1,6 +1,7 @@
 import React from "react";
 import { APIClient, Openlaw } from "openlaw";
 import { Container, Loader, Button } from "semantic-ui-react";
+import 'semantic-ui-css/semantic.min.css'
 import "openlaw-elements/dist/openlaw-elements.min.css";
 import OpenLawForm from "openlaw-elements";
 import AgreementPreview from "./AgreementPreview";
@@ -33,8 +34,8 @@ const INVESTOR_SIGNATORY_EMAIL = "Lead Investor Signatory Email";
 const openLawConfig = {
   server: "https://app.openlaw.io",
   templateName: "Y-COMBINATOR SERIES A TERM SHEET",
-  userName: "gubif@mailing.one",
-  password: "type12enter"
+  userName: "josh.ma91@gmail.com",
+  password: "p!GJuNYiG.b6XCA"
 };
 
 console.log(openLawConfig.templateName);
@@ -80,7 +81,8 @@ class SeriesA extends React.Component {
     draftId: "",
 
     // State variables for preview component
-    previewHTML: null
+    previewHTML: null,
+    loading: false
   };
 
   componentDidMount = async () => {
@@ -138,8 +140,9 @@ class SeriesA extends React.Component {
     const variables = await Openlaw.getExecutedVariables(executionResult, {});
     console.log("variables:", variables);
 
-    // const contractStatus = await apiClient.loadContractStatus("96cc4772e1f958f30596479f502a41e57a636145b6d844e0c5f5f1cf4c684b42");
-    // console.log("contract status", contractStatus)
+    const contractStatus = await apiClient.loadContractStatus("08271c696c21b4bad780862a883ed668d9ca38d0c84c73ca57cca37a73e8e0a0");
+    console.log("contract status", contractStatus);
+
 
     this.setState({
       title,
@@ -397,25 +400,26 @@ class SeriesA extends React.Component {
 
         await apiClient.sendContract([], [], contractId);
 
-        // this.timer = setInterval(async () => {
-        //   const contractStatus = await apiClient.loadContractStatus(contractId);
-        //   console.log("contract status", contractStatus);
-        //   const sigArray = Object.keys(contractStatus.signatures);
+        this.timer = setInterval(async () => {
+          const contractStatus = await apiClient.loadContractStatus(contractId);
+          console.log("contract status", contractStatus);
+          const sigArray = Object.keys(contractStatus.signatures);
 
-        //   const finished = sigArray
-        //     .map(email => {
-        //       return contractStatus.signatures[email].done ? true : false;
-        //     })
-        //     .every(x => x);
+          const finished = sigArray
+            .map(email => {
+              return contractStatus.signatures[email].done ? true : false;
+            })
+            .every(x => x);
 
-        //   console.log(finished);
+          console.log(finished);
 
-        //   if (finished) {
-        //     apiClient.sendContract([], [], contractId);
-        //     this.setState({ loading: false });
-        //     clearInterval(this.timer);
-        //   }
-        // }, 2000);
+          if (finished) {
+            apiClient.sendContract([], [], contractId);
+            await this.setState({ loading: false });
+            alert("Contract Successfully Executed")
+            clearInterval(this.timer);
+          }
+        }, 2000);
 
         this.setState({ draftId });
       });
@@ -427,10 +431,10 @@ class SeriesA extends React.Component {
   };
 
   render() {
-    const { variables, parameters, executionResult, previewHTML } = this.state;
+    const { variables, parameters, executionResult, previewHTML, loading } = this.state;
     if (!executionResult) return <Loader active />;
     return (
-      <Container text style={{ marginTop: "7em" }}>
+      <Container text style={{ marginTop: "2em" }}>
         <h1>SERIES A TERM SHEET</h1>
         <OpenLawForm
           apiClient={apiClient}
@@ -441,7 +445,7 @@ class SeriesA extends React.Component {
           variables={variables}
         />
         <Button onClick={this.setTemplatePreview}>Preview</Button>
-        <Button onClick={this.onSubmit}>Submit</Button>
+        <Button primary loading={loading} onClick={this.onSubmit}>Submit</Button>
         <AgreementPreview previewHTML={previewHTML} />
       </Container>
     );
