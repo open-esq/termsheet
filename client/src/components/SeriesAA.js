@@ -1,6 +1,7 @@
 import React from "react";
 import { APIClient, Openlaw } from "openlaw";
 import { Container, Loader, Button } from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css"
 import "openlaw-elements/dist/openlaw-elements.min.css";
 import OpenLawForm from "openlaw-elements";
 import AgreementPreview from "./AgreementPreview";
