@@ -410,6 +410,7 @@ class SeriesAA extends React.Component {
           variables={variables}
         />
         <Button onClick={this.setTemplatePreview}>Preview</Button>
+        <Button primary loading={loading} onClick={this.onSubmit}>Submit</Button>
         <AgreementPreview previewHTML={previewHTML} />
       </Container>
     );
