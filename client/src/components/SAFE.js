@@ -6,12 +6,11 @@ import OpenLawForm from "openlaw-elements";
 import AgreementPreview from "./AgreementPreview";
 require("dotenv").config();
 
-const COMPANY = "Company";
+const COMPANY = "Company Name";
 const COMPANY_ENTITY_STATUS = "Company Entity Status";
 const COMPANY_ENTITY_TYPE = "Company Entity Type";
 const COMPANY_JURISDICTION = "Company Jurisdiction";
 const COMPANY_ADDRESS = "Company Address";
-const COMPANY_ETHADDRESS = "Company EthAddress";
 const COMPANY_SIGNATORY_TITLE = "Company Representative Title";
 const COMPANY_SIGNATORY_EMAIL = "Company Representative Email";
 const GOVERNING_LAW = "Governing Law";
@@ -24,14 +23,12 @@ const POSTMONEY_VALUATION_CAP = "PostMoney Valuation Cap";
 const EFFECTIVE_DATE = "Date of SAFE";
 const INVESTOR = "Investor Name";
 const INVESTOR_ADDRESS = "Investor Address";
-const INVESTOR_ETHADDRESS = "Investor EthAddress";
-const INVESTOR_SIGNATORY = "Investor Signatory";
 const INVESTOR_SIGNATORY_TITLE = "Investor Representative Title";
 const INVESTOR_SIGNATORY_EMAIL = "Investor Representative Email";
 
 const openLawConfig = {
   server: "https://app.openlaw.io",
-  templateName: "Y COMBINATOR SAFE(TH)",
+  templateName: "Y COMBINATOR SAFE",
   userName: "josh.ma91@gmail.com",
   password: "p!GJuNYiG.b6XCA"
 };
@@ -49,7 +46,6 @@ class SAFE extends React.Component {
     compType: "Limited Liability Company",
     compJuris: "Delaware",
     compAddrs: null,
-    compEth: null,
     compSign: null,
     compSignT: null,
     compEmail: null,
@@ -63,8 +59,6 @@ class SAFE extends React.Component {
     effDate: null,
     investName: null,
     investAdd: null,
-    investEth: null,
-    investSign: null,
     investTitle: null,
     investEmail: null,
 
@@ -170,9 +164,6 @@ class SAFE extends React.Component {
       case COMPANY_ADDRESS:
         this.setState({ compAddrs: value });
         break;
-      case COMPANY_ETHADDRESS:
-        this.setState({ compEth: value });
-        break;
       case COMPANY_SIGNATORY_TITLE:
         this.setState({ compSignT: value });
         break;
@@ -206,12 +197,6 @@ class SAFE extends React.Component {
       case INVESTOR_ADDRESS:
         this.setState({ investAdd: value });
         break;
-      case INVESTOR_ETHADDRESS:
-        this.setState({ investEth: value });
-        break;
-      case INVESTOR_SIGNATORY:
-        this.setState({ investSign: value });
-        break;
       case INVESTOR_SIGNATORY_TITLE:
         this.setState({ investTitle: value });
         break;
@@ -228,7 +213,6 @@ class SAFE extends React.Component {
       compType,
       compJuris,
       compAddrs,
-      compEth,
       compSignT,
       compEmail,
       govLaw,
@@ -241,8 +225,6 @@ class SAFE extends React.Component {
       effDate,
       investName,
       investAdd,
-      investEth,
-      investSign,
       investTitle,
       investEmail,
       compiledTemplate
@@ -254,7 +236,6 @@ class SAFE extends React.Component {
         [COMPANY_ENTITY_TYPE]: compType,
         [COMPANY_JURISDICTION]: compJuris,
         [COMPANY_ADDRESS]: compAddrs,
-        [COMPANY_ETHADDRESS]: compEth,
         [COMPANY_SIGNATORY_TITLE]: compSignT,
         [COMPANY_SIGNATORY_EMAIL]: compEmail,
         [GOVERNING_LAW]: govLaw,
@@ -267,8 +248,6 @@ class SAFE extends React.Component {
         [EFFECTIVE_DATE]: effDate,
         [INVESTOR]: investName,
         [INVESTOR_ADDRESS]: investAdd,
-        [INVESTOR_ETHADDRESS]: investEth,
-        [INVESTOR_SIGNATORY]: investSign,
         [INVESTOR_SIGNATORY_TITLE]: investTitle,
         [INVESTOR_SIGNATORY_EMAIL]: investEmail
       };
@@ -299,7 +278,6 @@ class SAFE extends React.Component {
       compType,
       compJuris,
       compAddrs,
-      compEth,
       compSignT,
       compEmail,
       govLaw,
@@ -312,8 +290,6 @@ class SAFE extends React.Component {
       effDate,
       investName,
       investAdd,
-      investEth,
-      investSign,
       investTitle,
       investEmail,
     } = this.state;
@@ -329,7 +305,6 @@ class SAFE extends React.Component {
         [COMPANY_ENTITY_TYPE]: compType,
         [COMPANY_JURISDICTION]: compJuris,
         [COMPANY_ADDRESS]: compAddrs,
-        [COMPANY_ETHADDRESS]: compEth,
         [COMPANY_SIGNATORY_TITLE]: compSignT,
         [COMPANY_SIGNATORY_EMAIL]: compEmail,
         [GOVERNING_LAW]: govLaw,
@@ -342,8 +317,6 @@ class SAFE extends React.Component {
         [EFFECTIVE_DATE]: effDate,
         [INVESTOR]: investName,
         [INVESTOR_ADDRESS]: investAdd,
-        [INVESTOR_ETHADDRESS]: investEth,
-        [INVESTOR_SIGNATORY]: investSign,
         [INVESTOR_SIGNATORY_TITLE]: investTitle,
         [INVESTOR_SIGNATORY_EMAIL]: investEmail
       },
