@@ -26,6 +26,17 @@
   color: #61dafb;
 }
 
+/* Page Context */
+.pushable:not(body) {
+  transform: none;
+}
+
+.pushable:not(body) > .ui.sidebar,
+.pushable:not(body) > .fixed,
+.pushable:not(body) > .pusher:after {
+  position: fixed;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

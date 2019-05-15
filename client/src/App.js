@@ -94,7 +94,7 @@ const NavBarMobile = ({
   rightItems=[],
   visible
 }) => (
-  <Sidebar.Pushable>
+  <Sidebar.Pushable style={{transform:"none"}}>
     <Sidebar
       as={Menu}
       animation="overlay"
