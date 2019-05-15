@@ -10,13 +10,17 @@ import {
   Image,
   Menu,
   Sidebar,
-  Responsive
+  Responsive,
+  Header
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 
 class App extends React.Component {
   state = { index: 0, visible: false };
 
+  componentDidMount(){
+    document.title = "Termsheets.me"
+  }
   handlePusher = () => {
     const { visible } = this.state;
 
@@ -98,7 +102,7 @@ const NavBarMobile = ({
       inverted
       vertical
       visible={visible}
-      style={{paddingTop: "10px"}}
+      style={{paddingTop: "25px"}}
       width='thin'
     >
     {_.map(leftItems, item => (
@@ -111,13 +115,15 @@ const NavBarMobile = ({
       style={{ minHeight: "100vh" }}
     >
       <Menu fixed="top" inverted>
-        <Menu.Item>
-          <Image size="tiny" src="https://i.ibb.co/cXMrJSb/Open-Esq-Clipped.png" />
-        </Menu.Item>
-        <Menu.Item onClick={onToggle}>
+               <Menu.Item onClick={onToggle}>
           <Icon name="sidebar" />
         </Menu.Item>
+        <Menu.Item>
+          <Image size="mini" src="https://i.ibb.co/cXMrJSb/Open-Esq-Clipped.png" />
+          <Header as="h3" style={{ paddingLeft:"7px", margin:"0", color:"#e6e6e6"}}>Open Esquire</Header>
+        </Menu.Item>
         <Menu.Menu position="right">
+        
           {_.map(rightItems, item => <Menu.Item {...item} />)}
         </Menu.Menu>
       </Menu>
@@ -129,7 +135,8 @@ const NavBarMobile = ({
 const NavBarDesktop = ({ leftItems }) => (
   <Menu fixed="top" inverted>
     <Menu.Item>
-      <Image size="tiny" src="https://i.ibb.co/cXMrJSb/Open-Esq-Clipped.png" />
+      <Image size="mini" src="https://i.ibb.co/cXMrJSb/Open-Esq-Clipped.png" />
+      <Header as="h3" style={{ paddingLeft:"7px", margin:"0", color:"#e6e6e6"}}>Open Esquire</Header>
     </Menu.Item>
     {_.map(leftItems, item => (
       <Menu.Item {...item} />

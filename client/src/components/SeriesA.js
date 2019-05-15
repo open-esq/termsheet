@@ -1,10 +1,11 @@
 import React from "react";
 import { APIClient, Openlaw } from "openlaw";
 import { Container, Loader, Button } from "semantic-ui-react";
-import 'semantic-ui-css/semantic.min.css'
+import "semantic-ui-css/semantic.min.css";
 import "openlaw-elements/dist/openlaw-elements.min.css";
 import OpenLawForm from "openlaw-elements";
 import AgreementPreview from "./AgreementPreview";
+import "../App.css"
 require("dotenv").config();
 
 const COMPANY = "Company";
@@ -53,12 +54,12 @@ class SeriesA extends React.Component {
     compSign: null,
     compSignT: null,
     compEmail: null,
-    compVal: "5",
+    compVal: "",
     offAmnt: null,
     othAmnt: null,
     serCurr: null,
-    numShares: "5",
-    prcShares: "5",
+    numShares: "",
+    prcShares: "",
     postVal: null,
     optionPool: null,
     majDef: null,
@@ -140,9 +141,8 @@ class SeriesA extends React.Component {
     const variables = await Openlaw.getExecutedVariables(executionResult, {});
     console.log("variables:", variables);
 
-    const contractStatus = await apiClient.loadContractStatus("08271c696c21b4bad780862a883ed668d9ca38d0c84c73ca57cca37a73e8e0a0");
-    console.log("contract status", contractStatus);
-
+    // const contractStatus = await apiClient.getAccessToken("77142d90a44aa6f5a2611ad42f60879ec0db967457ab53e5eef9c05afec1912e");
+    // console.log("contract status", contractStatus);
 
     this.setState({
       title,
@@ -296,8 +296,10 @@ class SeriesA extends React.Component {
         agreements[0].agreement,
         {}
       );
-
-      this.setState({ previewHTML });
+      await this.setState({ previewHTML });
+      document.getElementById('preview').scrollIntoView({
+        behavior: 'smooth'
+      });
     } catch (error) {
       throw error;
     }
@@ -329,7 +331,6 @@ class SeriesA extends React.Component {
       investTitle,
       investEmail
     } = this.state;
-
 
     const object = {
       templateId: template.id,
@@ -416,22 +417,26 @@ class SeriesA extends React.Component {
           if (finished) {
             apiClient.sendContract([], [], contractId);
             await this.setState({ loading: false });
-            alert("Contract Successfully Executed")
+            alert("Contract Successfully Executed");
             clearInterval(this.timer);
           }
         }, 2000);
 
         this.setState({ draftId });
       });
-
-      
     } catch (error) {
       console.log(error);
     }
   };
 
   render() {
-    const { variables, parameters, executionResult, previewHTML, loading } = this.state;
+    const {
+      variables,
+      parameters,
+      executionResult,
+      previewHTML,
+      loading
+    } = this.state;
     if (!executionResult) return <Loader active />;
     return (
       <Container text style={{ marginTop: "2em" }}>
@@ -444,9 +449,13 @@ class SeriesA extends React.Component {
           openLaw={Openlaw}
           variables={variables}
         />
-        <Button onClick={this.setTemplatePreview}>Preview</Button>
-        <Button primary loading={loading} onClick={this.onSubmit}>Submit</Button>
-        <AgreementPreview previewHTML={previewHTML} />
+        <div className="button-group">
+          <Button onClick={this.setTemplatePreview}>Preview</Button>
+          <Button primary loading={loading} onClick={this.onSubmit}>
+            Submit
+          </Button>
+        </div>
+        <AgreementPreview id="preview" previewHTML={previewHTML} />
       </Container>
     );
   }
