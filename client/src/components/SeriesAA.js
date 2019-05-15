@@ -1,6 +1,7 @@
 import React from "react";
 import { APIClient, Openlaw } from "openlaw";
 import { Container, Loader, Button } from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css"
 import "openlaw-elements/dist/openlaw-elements.min.css";
 import OpenLawForm from "openlaw-elements";
 import AgreementPreview from "./AgreementPreview";
@@ -31,8 +32,8 @@ const INVESTOR_SIGNATORY_EMAIL = "Investor Signatory Email";
 const openLawConfig = {
   server: "https://app.openlaw.io",
   templateName: "Y-COMBINATOR SERIES AA TERM SHEET",
-  userName: "gubif@mailing.one",
-  password: "type12enter"
+  userName: "josh.ma91@gmail.com",
+  password: "p!GJuNYiG.b6XCA"
 };
 
 console.log(openLawConfig.templateName);
@@ -74,12 +75,13 @@ class SeriesAA extends React.Component {
     draftId: "",
 
     // State variables for preview component
-    previewHTML: null
+    previewHTML: null,
+    loading: false
   };
 
   componentDidMount = async () => {
 
-    console.log(openLawConfig.userName)
+    console.log(openLawConfig.userName);
     //const { web3, accounts, contract } = this.props;
     //create an instance of the API client with url as parameter
     apiClient
@@ -132,6 +134,9 @@ class SeriesAA extends React.Component {
 
     const variables = await Openlaw.getExecutedVariables(executionResult, {});
     console.log("variables:", variables);
+
+    const contractStatus = await apiClient.loadContractStatus("");
+    console.log("contract status", contractStatus);
 
     this.setState({
       title,
@@ -272,11 +277,129 @@ class SeriesAA extends React.Component {
     }
   };
 
+  buildOpenLawParamsObj = async (template, creatorId) => {
+    const {
+      compName,
+      compStatus,
+      compType,
+      compJuris,
+      compSign,
+      compSignT,
+      compEmail,
+      compVal,
+      offAmnt,
+      serCurr,
+      numShares,
+      prcShares,
+      prcThres,
+      infoThres,
+      effDate,
+      investName,
+      investSign,
+      investTitle,
+      investEmail,
+    } = this.state;
+
+    const object = {
+      templateId: template.id,
+      title: template.title,
+      text: template.content,
+      creator: this.state.creatorId,
+      parameters: {
+        [COMPANY]: compName,
+        [COMPANY_ENTITY_STATUS]: compStatus,
+        [COMPANY_ENTITY_TYPE]: compType,
+        [COMPANY_JURISDICTION]: compJuris,
+        [COMPANY_SIGNATORY]: compSign,
+        [COMPANY_SIGNATORY_TITLE]: compSignT,
+        [COMPANY_SIGNATORY_EMAIL]: compEmail,
+        [COMPANY_VALUATION]: compVal,
+        [OFFERING_AMOUNT]: offAmnt,
+        [SERIES_AA_CURRENCY]: serCurr,
+        [NUMBER_OF_SHARES]: numShares,
+        [PRICE_PER_SHARE]: prcShares,
+        [PURCHASE_RIGHTS_OWNERSHIP_THRESHOLD]: prcThres,
+        [INFORMATION_RIGHTS_OWNERSHIP_THRESHOLD]: infoThres,
+        [EFFECTIVE_DATE]: effDate,
+        [INVESTOR]: investName,
+        [INVESTOR_SIGNATORY]: investSign,
+        [INVESTOR_SIGNATORY_TITLE]: investTitle,
+        [INVESTOR_SIGNATORY_EMAIL]: investEmail
+      },
+      overriddenParagraphs: {},
+      agreements: {},
+      readonlyEmails: [],
+      editEmails: [],
+      draftId: this.state.draftId
+    };
+    return object;
+  };
+
+  onSubmit = async () => {
+    try {
+      //login to api
+      this.setState({ loading: true }, async () => {
+        apiClient.login(openLawConfig.userName, openLawConfig.password);
+        console.log("apiClient logged in");
+
+        //add Open Law params to be uploaded
+        const uploadParams = await this.buildOpenLawParamsObj(
+          this.state.template,
+          this.state.creatorId
+        );
+        console.log("parmeters from user..", uploadParams.parameters);
+        console.log("all parameters uploading...", uploadParams);
+
+        //uploadDraft, sends a draft contract to "Draft Management", which can be edited.
+        const draftId = await apiClient.uploadDraft(uploadParams);
+        console.log("draft id..", draftId);
+
+        const contractParams = {
+          ...uploadParams,
+          draftId
+        };
+        console.log(contractParams);
+
+        const contractId = await apiClient.uploadContract(contractParams);
+        console.log(contractId);
+
+        await apiClient.sendContract([], [], contractId);
+
+        this.timer = setInterval(async () => {
+          const contractStatus = await apiClient.loadContractStatus(contractId);
+          console.log("contract status", contractStatus);
+          const sigArray = Object.keys(contractStatus.signatures);
+
+          const finished = sigArray
+            .map(email => {
+              return contractStatus.signatures[email].done ? true : false;
+            })
+            .every(x => x);
+
+          console.log(finished);
+
+          if (finished) {
+            apiClient.sendContract([], [], contractId);
+            await this.setState({ loading: false });
+            alert("Contract Successfully Executed")
+            clearInterval(this.timer);
+          }
+        }, 2000);
+
+        this.setState({ draftId });
+      });
+
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   render() {
-    const { variables, parameters, executionResult, previewHTML } = this.state;
+    const { variables, parameters, executionResult, previewHTML, loading } = this.state;
     if (!executionResult) return <Loader active />;
     return (
-      <Container text style={{ marginTop: "7em" }}>
+      <Container text style={{ marginTop: "2em" }}>
         <h1>SERIES AA TERM SHEET</h1>
         <OpenLawForm
           apiClient={apiClient}
@@ -287,6 +410,7 @@ class SeriesAA extends React.Component {
           variables={variables}
         />
         <Button onClick={this.setTemplatePreview}>Preview</Button>
+        <Button primary loading={loading} onClick={this.onSubmit}>Submit</Button>
         <AgreementPreview previewHTML={previewHTML} />
       </Container>
     );
