@@ -112,7 +112,7 @@ const NavBarMobile = ({
     >
       <Menu fixed="top" inverted>
         <Menu.Item>
-          <Image size="mini" src="https://react.semantic-ui.com/logo.png" />
+          <Image size="tiny" src="https://i.ibb.co/cXMrJSb/Open-Esq-Clipped.png" />
         </Menu.Item>
         <Menu.Item onClick={onToggle}>
           <Icon name="sidebar" />
@@ -129,7 +129,7 @@ const NavBarMobile = ({
 const NavBarDesktop = ({ leftItems }) => (
   <Menu fixed="top" inverted>
     <Menu.Item>
-      <Image size="mini" src="https://react.semantic-ui.com/logo.png" />
+      <Image size="tiny" src="https://i.ibb.co/cXMrJSb/Open-Esq-Clipped.png" />
     </Menu.Item>
     {_.map(leftItems, item => (
       <Menu.Item {...item} />
