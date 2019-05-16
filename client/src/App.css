@@ -7,8 +7,12 @@
   height: 40vmin;
 }
 
+.success-message{
+  margin-bottom: 5px;
+}
+
 .button-group{
-  padding-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .App-header {

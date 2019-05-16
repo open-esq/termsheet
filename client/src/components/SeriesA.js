@@ -1,11 +1,11 @@
 import React from "react";
 import { APIClient, Openlaw } from "openlaw";
-import { Container, Loader, Button } from "semantic-ui-react";
+import { Container, Loader, Button, Message } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import "openlaw-elements/dist/openlaw-elements.min.css";
 import OpenLawForm from "openlaw-elements";
 import AgreementPreview from "./AgreementPreview";
-import "../App.css"
+import "../App.css";
 require("dotenv").config();
 
 const COMPANY = "Company";
@@ -83,7 +83,8 @@ class SeriesA extends React.Component {
 
     // State variables for preview component
     previewHTML: null,
-    loading: false
+    loading: false,
+    success: false
   };
 
   componentDidMount = async () => {
@@ -297,8 +298,8 @@ class SeriesA extends React.Component {
         {}
       );
       await this.setState({ previewHTML });
-      document.getElementById('preview').scrollIntoView({
-        behavior: 'smooth'
+      document.getElementById("preview").scrollIntoView({
+        behavior: "smooth"
       });
     } catch (error) {
       throw error;
@@ -401,28 +402,10 @@ class SeriesA extends React.Component {
 
         await apiClient.sendContract([], [], contractId);
 
-        this.timer = setInterval(async () => {
-          const contractStatus = await apiClient.loadContractStatus(contractId);
-          console.log("contract status", contractStatus);
-          const sigArray = Object.keys(contractStatus.signatures);
-
-          const finished = sigArray
-            .map(email => {
-              return contractStatus.signatures[email].done ? true : false;
-            })
-            .every(x => x);
-
-          console.log(finished);
-
-          if (finished) {
-            apiClient.sendContract([], [], contractId);
-            await this.setState({ loading: false });
-            alert("Contract Successfully Executed");
-            clearInterval(this.timer);
-          }
-        }, 2000);
-
-        this.setState({ draftId });
+        await this.setState({ loading: false, success: true, draftId });
+        document.getElementById("success").scrollIntoView({
+          behavior: "smooth"
+        });
       });
     } catch (error) {
       console.log(error);
@@ -435,7 +418,8 @@ class SeriesA extends React.Component {
       parameters,
       executionResult,
       previewHTML,
-      loading
+      loading,
+      success
     } = this.state;
     if (!executionResult) return <Loader active />;
     return (
@@ -455,6 +439,18 @@ class SeriesA extends React.Component {
             Submit
           </Button>
         </div>
+
+        <Message
+          style={success ? { display: "block" } : { display: "none" }}
+          className="success-message"
+          positive
+          id="success"
+        >
+          <Message.Header>Submission Successful</Message.Header>
+          <p>
+            Check your <b>e-mail</b> to sign contract
+          </p>
+        </Message>
         <AgreementPreview id="preview" previewHTML={previewHTML} />
       </Container>
     );
