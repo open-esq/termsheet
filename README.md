@@ -1,3 +1,3 @@
-# [Termsheets.me](termsheets.me) 🤝
+# Termsheets.me 🤝
 
-DIY fundraising docs based on market standard [Y-Combinator deal materials](https://www.ycombinator.com/series_a_term_sheet/).
+Deploy DIY fundraising docs in seconds based on market standard [Y-Combinator deal materials](https://www.ycombinator.com/series_a_term_sheet/).
