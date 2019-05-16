@@ -11,24 +11,21 @@ const COMPANY_ENTITY_STATUS = "Company Entity Status";
 const COMPANY_ENTITY_TYPE = "Company Entity Type";
 const COMPANY_JURISDICTION = "Company Jurisdiction";
 const COMPANY_ADDRESS = "Company Address";
-const COMPANY_SIGNATORY_TITLE = "Company Representative Title";
-const COMPANY_SIGNATORY_EMAIL = "Company Representative Email";
-const GOVERNING_LAW = "Governing Law";
-const COMPANY_VALUATION = "Company Valuation";
-const OFFERING_AMOUNT = "Offering Amount";
+const COMPANY_SIGNATORY_TITLE = "Company Signatory Title";
+const COMPANY_SIGNATORY_EMAIL = "Company Signatory Email";
 const SERIES_AA_CURRENCY = "SAFE Currency";
-const NUMBER_OF_SHARES = "Number of Shares";
 const PRICE_PER_SHARE = "Purchase Amount";
 const POSTMONEY_VALUATION_CAP = "PostMoney Valuation Cap";
 const EFFECTIVE_DATE = "Date of SAFE";
 const INVESTOR = "Investor Name";
 const INVESTOR_ADDRESS = "Investor Address";
-const INVESTOR_SIGNATORY_TITLE = "Investor Representative Title";
-const INVESTOR_SIGNATORY_EMAIL = "Investor Representative Email";
+const INVESTOR_SIGNATORY_TITLE = "Investor Signatory Title";
+const INVESTOR_SIGNATORY_EMAIL = "Investor Signatory Email";
+const GOVERNING_LAW = "Governing Law"
 
 const openLawConfig = {
   server: "https://app.openlaw.io",
-  templateName: "Y COMBINATOR SAFE",
+  templateName: "Y-COMBINATOR SAFE",
   userName: "josh.ma91@gmail.com",
   password: "p!GJuNYiG.b6XCA"
 };
@@ -49,11 +46,7 @@ class SAFE extends React.Component {
     compSign: null,
     compSignT: null,
     compEmail: null,
-    govLaw: null,
-    compVal: null,
-    offAmnt: null,
     serCurr: null,
-    numShares: null,
     prcShares: null,
     postCap: null,
     effDate: null,
@@ -61,6 +54,7 @@ class SAFE extends React.Component {
     investAdd: null,
     investTitle: null,
     investEmail: null,
+    govLaw: null,
 
     // State variables for OpenLaw
     title: "",
@@ -78,7 +72,6 @@ class SAFE extends React.Component {
   };
 
   componentDidMount = async () => {
-
     console.log(openLawConfig.userName);
     //const { web3, accounts, contract } = this.props;
     //create an instance of the API client with url as parameter
@@ -133,9 +126,6 @@ class SAFE extends React.Component {
     const variables = await Openlaw.getExecutedVariables(executionResult, {});
     console.log("variables:", variables);
 
-    /*const contractStatus = await apiClient.loadContractStatus("08271c696c21b4bad780862a883ed668d9ca38d0c84c73ca57cca37a73e8e0a0");
-    console.log("contract status", contractStatus); */
-
     this.setState({
       title,
       template,
@@ -170,17 +160,8 @@ class SAFE extends React.Component {
       case COMPANY_SIGNATORY_EMAIL:
         this.setState({ compEmail: value });
         break;
-      case COMPANY_VALUATION:
-        this.setState({ compVal: value });
-        break;
-      case OFFERING_AMOUNT:
-        this.setState({ offAmnt: value });
-        break;
       case SERIES_AA_CURRENCY:
         this.setState({ serCurr: value });
-        break;
-      case NUMBER_OF_SHARES:
-        this.setState({ numShares: value });
         break;
       case PRICE_PER_SHARE:
         this.setState({ prcShares: value });
@@ -203,6 +184,9 @@ class SAFE extends React.Component {
       case INVESTOR_SIGNATORY_EMAIL:
         this.setState({ investEmail: value });
         break;
+      case GOVERNING_LAW:
+        this.setState({ govLaw: value });
+        break;
     }
     console.log("KEY:", key, "VALUE:", value);
   };
@@ -215,11 +199,7 @@ class SAFE extends React.Component {
       compAddrs,
       compSignT,
       compEmail,
-      govLaw,
-      compVal,
-      offAmnt,
       serCurr,
-      numShares,
       prcShares,
       postCap,
       effDate,
@@ -227,6 +207,7 @@ class SAFE extends React.Component {
       investAdd,
       investTitle,
       investEmail,
+      govLaw,
       compiledTemplate
     } = this.state;
     try {
@@ -238,18 +219,15 @@ class SAFE extends React.Component {
         [COMPANY_ADDRESS]: compAddrs,
         [COMPANY_SIGNATORY_TITLE]: compSignT,
         [COMPANY_SIGNATORY_EMAIL]: compEmail,
-        [GOVERNING_LAW]: govLaw,
-        [COMPANY_VALUATION]: compVal,
-        [OFFERING_AMOUNT]: offAmnt,
         [SERIES_AA_CURRENCY]: serCurr,
-        [NUMBER_OF_SHARES]: numShares,
         [PRICE_PER_SHARE]: prcShares,
         [POSTMONEY_VALUATION_CAP]: postCap,
         [EFFECTIVE_DATE]: effDate,
         [INVESTOR]: investName,
         [INVESTOR_ADDRESS]: investAdd,
         [INVESTOR_SIGNATORY_TITLE]: investTitle,
-        [INVESTOR_SIGNATORY_EMAIL]: investEmail
+        [INVESTOR_SIGNATORY_EMAIL]: investEmail,
+        [GOVERNING_LAW]: govLaw
       };
       console.log(params);
 
@@ -280,11 +258,7 @@ class SAFE extends React.Component {
       compAddrs,
       compSignT,
       compEmail,
-      govLaw,
-      compVal,
-      offAmnt,
       serCurr,
-      numShares,
       prcShares,
       postCap,
       effDate,
@@ -292,6 +266,7 @@ class SAFE extends React.Component {
       investAdd,
       investTitle,
       investEmail,
+      govLaw
     } = this.state;
 
     const object = {
@@ -307,18 +282,15 @@ class SAFE extends React.Component {
         [COMPANY_ADDRESS]: compAddrs,
         [COMPANY_SIGNATORY_TITLE]: compSignT,
         [COMPANY_SIGNATORY_EMAIL]: compEmail,
-        [GOVERNING_LAW]: govLaw,
-        [COMPANY_VALUATION]: compVal,
-        [OFFERING_AMOUNT]: offAmnt,
         [SERIES_AA_CURRENCY]: serCurr,
-        [NUMBER_OF_SHARES]: numShares,
         [PRICE_PER_SHARE]: prcShares,
         [POSTMONEY_VALUATION_CAP]: postCap,
         [EFFECTIVE_DATE]: effDate,
         [INVESTOR]: investName,
         [INVESTOR_ADDRESS]: investAdd,
         [INVESTOR_SIGNATORY_TITLE]: investTitle,
-        [INVESTOR_SIGNATORY_EMAIL]: investEmail
+        [INVESTOR_SIGNATORY_EMAIL]: investEmail,
+        [GOVERNING_LAW]: govLaw
       },
       overriddenParagraphs: {},
       agreements: {},
@@ -375,22 +347,26 @@ class SAFE extends React.Component {
           if (finished) {
             apiClient.sendContract([], [], contractId);
             await this.setState({ loading: false });
-            alert("Contract Successfully Executed")
+            alert("Contract Successfully Executed");
             clearInterval(this.timer);
           }
         }, 2000);
 
         this.setState({ draftId });
       });
-
-
     } catch (error) {
       console.log(error);
     }
   };
 
   render() {
-    const { variables, parameters, executionResult, previewHTML, loading } = this.state;
+    const {
+      variables,
+      parameters,
+      executionResult,
+      previewHTML,
+      loading
+    } = this.state;
     if (!executionResult) return <Loader active />;
     return (
       <Container text style={{ marginTop: "2em" }}>
@@ -404,7 +380,9 @@ class SAFE extends React.Component {
           variables={variables}
         />
         <Button onClick={this.setTemplatePreview}>Preview</Button>
-        <Button primary loading={loading} onClick={this.onSubmit}>Submit</Button>
+        <Button primary loading={loading} onClick={this.onSubmit}>
+          Submit
+        </Button>
         <AgreementPreview previewHTML={previewHTML} />
       </Container>
     );

@@ -135,9 +135,6 @@ class SeriesAA extends React.Component {
     const variables = await Openlaw.getExecutedVariables(executionResult, {});
     console.log("variables:", variables);
 
-    const contractStatus = await apiClient.loadContractStatus("");
-    console.log("contract status", contractStatus);
-
     this.setState({
       title,
       template,
