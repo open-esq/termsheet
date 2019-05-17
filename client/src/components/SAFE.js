@@ -244,6 +244,10 @@ class SAFE extends React.Component {
         agreements[0].agreement,
         {}
       );
+      await this.setState({ previewHTML });
+      document.getElementById("preview").scrollIntoView({
+        behavior: "smooth"
+      });
 
       this.setState({ previewHTML });
     } catch (error) {
@@ -380,7 +384,7 @@ class SAFE extends React.Component {
             Check your <b>e-mail</b> to sign contract
           </p>
         </Message>
-        <AgreementPreview previewHTML={previewHTML} />
+        <AgreementPreview id="preview" previewHTML={previewHTML} />
       </Container>
     );
   }
