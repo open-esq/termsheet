@@ -92,9 +92,6 @@ class SeriesA extends React.Component {
     const variables = await Openlaw.getExecutedVariables(executionResult, {});
     console.log("variables:", variables);
 
-    // const contractStatus = await apiClient.getAccessToken("77142d90a44aa6f5a2611ad42f60879ec0db967457ab53e5eef9c05afec1912e");
-    // console.log("contract status", contractStatus);
-
     this.setState({
       title,
       template,
@@ -107,7 +104,7 @@ class SeriesA extends React.Component {
   };
 
   onChange = (key, value) => {
-    console.log(this.state.parameters)
+    const {compiledTemplate} = this.state
     const parameters = key
     ? ({
       ...this.state.parameters,
@@ -115,8 +112,14 @@ class SeriesA extends React.Component {
     }) : (
       this.state.parameters
     );
-    console.log("KEY:", key, "VALUE:", value);
-    this.setState({parameters})
+
+    const { executionResult, errorMessage } = Openlaw.execute(
+      compiledTemplate.compiledTemplate,
+      {},
+      parameters
+    );
+    const variables = Openlaw.getExecutedVariables(executionResult, {});
+    this.setState({parameters, variables, executionResult})
     }
   
   setTemplatePreview = async () => {
